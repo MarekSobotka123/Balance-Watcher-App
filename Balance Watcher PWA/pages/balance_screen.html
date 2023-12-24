@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Balance Watcher</title>
+    <!-- Links -->
+    <link rel="stylesheet" href="/css/styles.css" type="text/css">
+    <link rel="manifest" href="/manifest.json">
+    <!-- ios support -->
+    <link rel="apple-touch-icon" href="/icons/cash_icon96x96">
+    <meta name="apple-mobile-web-app-status-bar" content="585858">
+    <meta name="theme-color" content="#585858">
+</head>
+
+<body>
+    <!-- Label to indicate the current screen, will be deleted later -->
+    <p id="paragraph">BalanceScreen</p>
+
+    <!-- Settings Button -->
+    <a href="/pages/settings_screen.html" class="settings_button"><img id="settings_image" src="/img/settings_button.png" alt=""></a>
+
+    <!-- Home Button -->
+    <a href="/index.html" class="balance_button">Home</a>
+
+    <!-- Avatar Button/Image -->
+    <div id="avatar_button">
+        <img id="avatar_image" src="/img/man_1.png" onclick="console.log('avatar_button pressed')">
+    </div>
+
+    <!-- Date Button -->
+    <button id="date_button" onclick="console.log('date_button pressed')">'currentdate'<span id="currentDateDisplay"></span></button>
+
+    <!-- Spendings Inputs -->
+    <div class="spendings_form_container">
+        <form id="spendings_form">
+            <label id="spending_label">Výdaje</label>
+            <input type="text" id="spending_form_value" name="spending1" placeholder="Částka" required><br>
+
+            <input type="text" id="spending_form_comment" name="spending2" placeholder="Komentář"><br>
+
+            <button type="button" class="submit-button spending" onclick="submitForm('spending_form')">Submit</button>
+        </form>
+    </div>
+
+    <!-- Earnings Inputs -->
+    <div class="earnings_form_container">
+        <form id="earnings_form">
+            <label id="earning_label">Příjmy</label>
+            <input type="text" id="earning_form_value" name="earning1" placeholder="Částka" required><br>
+
+            <input type="text" id="earning_form_comment" name="earning2" placeholder="Komentář"><br>
+
+            <button type="button" class="submit-button earning" onclick="submitForm('earning_form')">Submit</button>
+        </form>
+    </div>
+
+    <!-- Data Label -->
+    <canvas id="balanceChart"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnh7-iR5LxxPUQfenJ_wfTxjwWjI54Ouo",
+            authDomain: "balance-app-f99d5.firebaseapp.com",
+            databaseURL: "https://balance-app-f99d5-default-rtdb.firebaseio.com",
+            projectId: "balance-app-f99d5",
+            storageBucket: "balance-app-f99d5.appspot.com",
+            messagingSenderId: "289081540262",
+            appId: "1:289081540262:web:7da47083d8cdfa9bee3e67",
+            measurementId: "G-EXPXWMT643"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();  
+    </script>
+
+    <script>
+        // Function to update the bar chart based on spendings and earnings
+        function updateBarChart(spendingsData, earningsData) {
+            var ctx = document.getElementById('balanceChart').getContext('2d');
+            
+            // Create a bar chart
+            var myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                labels: ['Výdaje', 'Příjmy'],
+                datasets: [{
+                    label: 'Graf za dnešek',
+                    data: [spendingsData, earningsData],
+                    borderWidth: 1,
+                    borderRadius: 15, // Rounded edges in CSS
+                }],
+                },
+                options: {
+                scales: {
+                    y: {
+                    beginAtZero: true,
+                    },
+                },
+                },
+            });
+        }
+    
+        // Function to get the date from Database
+        function getDateFromConfig() {
+            // Reference to the "config" collection
+            var configDocRef = db.collection('config').doc('Rg3Rzq5VOBvrGKMR2W3Q');
+        
+            // Get the selected date from the config collection
+            return configDocRef.get().then((configSnapshot) => {
+                var selectedDate = configSnapshot.data().selected_day;
+                return selectedDate;
+            });
+        }
+    
+        // Function to get spendings and earnings for the current day
+        function getEarningsAndSpendingsForDate() {
+            console.log('getEaSfD func called')
+            // Get the current date
+            return getDateFromConfig().then((selectedDate) => {
+                console.log('Selected date:', selectedDate);
+        
+                // Reference to the "balance" collection for the specified date
+                var balanceDocRef = db.collection('balance').doc(selectedDate);
+        
+                // Get earnings for the specified date
+                return balanceDocRef.collection('individual_earnings').get().then((earningsSnapshot) => {
+                var earningsData = earningsSnapshot.docs.reduce((total, doc) => total + doc.data().amount, 0);
+        
+                // Get spendings for the specified date
+                return balanceDocRef.collection('individual_spendings').get().then((spendingsSnapshot) => {
+                    var spendingsData = spendingsSnapshot.docs.reduce((total, doc) => total + doc.data().amount, 0);
+        
+                    // Log or use the earningsData and spendingsData as needed
+                    console.log('Earnings for ' + selectedDate + ':', earningsData);
+                    console.log('Spendings for ' + selectedDate + ':', spendingsData);
+        
+                    // Update the bar chart with the data
+                    updateBarChart(spendingsData, earningsData);
+                });
+                });
+            }).catch((error) => {
+                console.error('Error getting data:', error);
+            });
+        }
+    
+        // Call the function to get and update the data
+        getEarningsAndSpendingsForDate();
+    </script>
+
+    <script>
+        function submitForm(formId) {
+            // Get values from input fields
+            var valueId = formId + "_value";
+            var commentId = formId + "_comment";
+            var valueInput = document.getElementById(valueId);
+            var commentInput = document.getElementById(commentId);
+            var value = parseInt(valueInput.value);
+            var comment = commentInput.value;
+
+            // Validate that 'amount' is a valid number
+            if (isNaN(value)) {
+                console.log("Invalid amount value. Please enter a valid number.");
+                return; // Exit the function if 'amount' is not a valid number
+            }
+
+            // Log the values to the console
+            console.log("Form ID: " + formId);
+            console.log("Value: " + value);
+            console.log("Comment: " + comment);
+
+            // Add the values and comment to the database
+            addDataToBalance(formId, value, comment);
+
+            // Clear the input fields
+            valueInput.value = "";
+            commentInput.value = "";
+
+            // Update the graph after submitting the form
+            getEarningsAndSpendingsForDate();
+        }
+    </script>
+
+    <script src="/js/db.js"></script>   
+    <script src="/js/app.js"></script>    
+    <script src="/js/ui.js"></script>
+
+</body>
+</html>

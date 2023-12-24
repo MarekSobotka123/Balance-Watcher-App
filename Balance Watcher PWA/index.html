@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Balance Watcher</title>
+    <!-- Links -->
+    <link rel="stylesheet" href="/css/styles.css" type="text/css">
+    <link rel="manifest" href="/manifest.json">
+    <!-- ios suppport -->
+    <link rel="apple-touch-icon" href="/icons/cash_icon96x96">
+    <meta name="apple-mobile-web-app-status-bar" content="585858">
+    <meta name="theme-color" content="#585858">
+</head>
+
+<body>
+    <!-- Label to indicate the current screen, will be deleted later -->
+    <p id="paragraph">HomeScreen</p>
+
+    <!-- Settings Button -->
+    <a href="/pages/settings_screen.html" class="settings_button"><img id="settings_image" src="/img/settings_button.png" alt=""></a>
+
+    <!-- Balance Button -->
+    <a href="/pages/balance_screen.html" class="balance_button">Balance</a>
+
+    <!-- Avatar Button/Image -->
+    <div id="avatar_button">
+        <img id="avatar_image" src="/img/man_1.png" onclick="console.log('avatar_button pressed');openAvatarPopup()">
+    </div>
+
+    <!-- Avatar Popup -->
+    <div id="avatarPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closeAvatarPopup()">&times;</span>
+            <h2>Select Your Avatar</h2>
+            <div id="avatarGrid" class="avatar-grid"></div>
+        </div>
+    </div>
+
+    <!-- Date Button -->
+    <button id="date_button" onclick="console.log('date_button pressed')">'currentdate'<span id="currentDateDisplay"></span></button>
+
+    <!-- Graph Period Button -->
+    <button id="graph_button" onclick="console.log('graphperiod_button pressed')">'graphperiod'</button>
+
+    <!-- Place where later will be actual graph, now it's just to show the dimension of it -->
+    <button id="actual_graph">"actualgraph"</button>
+
+    <script src= "https://www.gstatic.com/firebasejs/6.0.1/firebase-app.js"></script>
+    <script src= "https://www.gstatic.com/firebasejs/6.0.1/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+        apiKey: "AIzaSyDnh7-iR5LxxPUQfenJ_wfTxjwWjI54Ouo",
+        authDomain: "balance-app-f99d5.firebaseapp.com",
+        databaseURL: "https://balance-app-f99d5-default-rtdb.firebaseio.com",
+        projectId: "balance-app-f99d5",
+        storageBucket: "balance-app-f99d5.appspot.com",
+        messagingSenderId: "289081540262",
+        appId: "1:289081540262:web:7da47083d8cdfa9bee3e67",
+        measurementId: "G-EXPXWMT643"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();  
+    </script>
+
+    <script src="/js/db.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/ui.js"></script>
+    
+</body>
+</html>

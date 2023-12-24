@@ -1,0 +1,46 @@
+{
+    "name": "Balance Watcher",
+    "short_name": "BalanceWatcher",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#272727",
+    "theme_color": "#000000",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/img/icons/cash_icon72x72.png",
+            "type": "image/png",
+            "sizes": "72x72"
+        },
+        {
+            "src": "/img/icons/cash_icon96x96.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        },
+        {
+            "src": "/img/icons/cash_icon128x128.png",
+            "type": "image/png",
+            "sizes": "128x128"
+        },
+        {
+            "src": "/img/icons/cash_icon152x152.png",
+            "type": "image/png",
+            "sizes": "152x152"
+        },
+        {
+            "src": "/img/icons/cash_icon192x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/img/icons/cash_icon384x384.png",
+            "type": "image/png",
+            "sizes": "384x384"
+        },
+        {
+            "src": "/img/icons/cash_icon512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
+}
