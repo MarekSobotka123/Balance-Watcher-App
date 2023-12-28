@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Balance Watcher</title>
     <!-- Links -->
@@ -9,8 +9,33 @@
     <link rel="manifest" href="/manifest.json">
     <!-- ios suppport -->
     <link rel="apple-touch-icon" href="/icons/cash_icon96x96">
-    <meta name="apple-mobile-web-app-status-bar" content="585858">
-    <meta name="theme-color" content="#585858">
+    <meta name="apple-mobile-web-app-status-bar" content="272727">
+    <meta name="theme-color" content="#272727">
+
+    <style>
+        body.light-theme {
+            /* Default to light theme */
+            --background_color: #fafafa; 
+            --primary_color: #a8cbff;
+            --secondary_color: #4a87e3;
+            --third_color: #7a7979;
+        }
+
+        body.dark-theme {
+            /* Dark theme styles */
+            --background_color: #272727;
+            --primary_color: #4a87e3;
+            --secondary_color: #a8cbff;
+            --third_color: #7a7979;
+            --text_color: black;
+        }
+
+        body {
+            /* Apply background color using the custom property */
+            background-color: var(--background_color);
+        }
+    </style>
+
 </head>
 
 <body>
@@ -25,26 +50,70 @@
 
     <!-- Avatar Button/Image -->
     <div id="avatar_button">
-        <img id="avatar_image" src="/img/man_1.png" onclick="console.log('avatar_button pressed');openAvatarPopup()">
+        <img id="avatar_image" src="/img/man_1.png">
     </div>
 
     <!-- Avatar Popup -->
-    <div id="avatarPopup" class="popup">
+    <!-- <div id="avatarPopup" class="popup">
         <div class="popup-content">
             <span class="close" onclick="closeAvatarPopup()">&times;</span>
             <h2>Select Your Avatar</h2>
             <div id="avatarGrid" class="avatar-grid"></div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Date Button -->
-    <button id="date_button" onclick="console.log('date_button pressed')">'currentdate'<span id="currentDateDisplay"></span></button>
+    <button id="date_button" onclick="console.log('date_button pressed');openDateSelectionPopup()"><span id="currentDateDisplay"></span></button>
 
-    <!-- Graph Period Button -->
-    <button id="graph_button" onclick="console.log('graphperiod_button pressed')">'graphperiod'</button>
+    <!-- Date Selection Popup -->
+    <div id="dateSelectionPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="hideDateSelectionPopup()">&times;</span>
+            <h2>Select Your Date</h2>
+            <div class="spinner-container">
+                <div class="spinner" id="daySpinner"></div>
+                <div class="spinner" id="monthSpinner"></div>
+                <div class="spinner" id="yearSpinner"></div>
+            </div>
+            <button onclick="console.log('ok_button pressed');updateSelectedDate();getInformationsForBuilding()">OK</button>
+        </div>
+    </div>
 
-    <!-- Place where later will be actual graph, now it's just to show the dimension of it -->
-    <button id="actual_graph">"actualgraph"</button>
+
+    <!-- Period Button -->
+    <button id="period_button" onclick="console.log('period_button pressed');openPeriodPopup()">Period: <span id="currentPeriodDisplay"></span></button>
+
+    <!-- Period Popup -->
+    <div id="periodSelectionPopup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="hidePeriodPopup()">&times;</span>
+            <h2>Select Time Period</h2>
+            <div class="period-container">
+                <button id="week" class="period-selection-button" onclick="updatePeriod('week');getInformationsForBuilding()">week</button>
+                <button id="month" class="period-selection-button" onclick="updatePeriod('month');getInformationsForBuilding()">month</button>
+                <button id="year" class="period-selection-button" onclick="updatePeriod('year');getInformationsForBuilding()">year</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Balance Display for Period -->
+    <div id="balance_display">
+        <div id="balance_text">
+            <h3>Balance for <span id="period_for_balance"></span> period:&nbsp;&nbsp;&nbsp;<span id="balance_for_period"></span></h3>
+        </div>
+    </div>
+
+    <!-- Data Label -->
+    <div class="container">
+        <div class="chart">
+            <canvas id="barchart-home" height="190px"></canvas>
+        </div>
+    </div>
+
+    <script src="/js/theme.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src= "https://www.gstatic.com/firebasejs/6.0.1/firebase-app.js"></script>
     <script src= "https://www.gstatic.com/firebasejs/6.0.1/firebase-firestore.js"></script>
@@ -65,9 +134,11 @@
         const db = firebase.firestore();  
     </script>
 
+
     <script src="/js/db.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/ui.js"></script>
-    
+    <script src="/js/charts.js"></script>
+
 </body>
 </html>
