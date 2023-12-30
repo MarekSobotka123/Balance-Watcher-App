@@ -1,7 +1,7 @@
 // theme.js
 
 function applyTheme(theme) {
-    console.log('switching to:', theme)
+    // console.log('switching to:', theme)
     document.body.classList.remove('dark-theme', 'light-theme');
     document.body.classList.add(`${theme}-theme`);
 }

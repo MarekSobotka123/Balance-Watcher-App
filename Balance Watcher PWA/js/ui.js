@@ -49,10 +49,10 @@ function loadConfig() {
 
     getDateRequest.onsuccess = function (event) {
         const currentDate = event.target.result;
-        console.log('currentDate = ', currentDate);
+        // console.log('currentDate = ', currentDate);
 
         if (currentDate) {
-            console.log('Current Date:', currentDate.value);
+            // console.log('Current Date:', currentDate.value);
 
             // Update the UI with the current date
             const currentDateDisplay = document.getElementById('currentDateDisplay');
@@ -73,10 +73,10 @@ function loadConfig() {
 
     getPeriodRequest.onsuccess = function (event) {
         const currentPeriod = event.target.result;
-        console.log('currentPeriod = ', currentPeriod);
+        // console.log('currentPeriod = ', currentPeriod);
 
         if (currentPeriod) {
-            console.log('Current Period:', currentPeriod.value);
+            // console.log('Current Period:', currentPeriod.value);
 
             // Update the UI with the current period
             const currentPeriodDisplay = document.getElementById('currentPeriodDisplay');
@@ -89,7 +89,7 @@ function loadConfig() {
             if (currentPeriodDisplayText) {
                 currentPeriodDisplayText.textContent = currentPeriod.value;
             }
-        console.log('updating UI with period')
+        // console.log('updating UI with period')
         getDatesFromConfig(currentPeriod.value);
         } else {
             console.log('Current Period not found');
@@ -107,7 +107,7 @@ function loadConfig() {
         const avatarPath = event.target.result;
 
         if (avatarPath) {
-            console.log('Avatar Path:', avatarPath.value);
+            // console.log('Avatar Path:', avatarPath.value);
             
 
             // Update the UI with the avatar path
@@ -116,7 +116,7 @@ function loadConfig() {
                 avatarImage.src = avatarPath.value;
             }
         } else {
-            console.log('Avatar Path not found');
+            // console.log('Avatar Path not found');
         }
     };
 
@@ -126,24 +126,24 @@ function loadConfig() {
 }
 
 function openPeriodPopup() {
-    console.log("Period Selection Popup successfully opened")
+    // console.log("Period Selection Popup successfully opened")
     document.getElementById('periodSelectionPopup').style.display = 'block';
 }
 
 function hidePeriodPopup() {
-    console.log("Period Selection Popup successfully closed")
+    // console.log("Period Selection Popup successfully closed")
     document.getElementById('periodSelectionPopup').style.display = 'none';
 }
 
 // Function to open the date selection popup
 function openDateSelectionPopup() {
-    console.log("Data Selection Popup successfully opened")
+    // console.log("Data Selection Popup successfully opened")
     document.getElementById('dateSelectionPopup').style.display = 'block';
 }
 
 // Function to hide the date selection popup
 function hideDateSelectionPopup() {
-    console.log("Data Selection Popup successfully closed")
+    // console.log("Data Selection Popup successfully closed")
     document.getElementById('dateSelectionPopup').style.display = 'none';
 }
 
@@ -213,7 +213,7 @@ function updateCurrentDate(selectedDate) {
 
     loadConfig()
 
-    console.log('Current Date updated successfully');
+    // console.log('Current Date updated successfully');
 }
 
 // Function to update the 'selected_day' key in the config table
@@ -231,12 +231,12 @@ function updatePeriod(period) {
 
     // Add or update the 'selected_day' key in the config table
     configStore.put(currentDateObject);
-    console.log('Config updated with', currentDateObject)
+    // console.log('Config updated with', currentDateObject)
 
-    console.log('Period updated successfully');
+    // console.log('Period updated successfully');
 
-    loadConfig();console.log('loading config')  
-    console.log('updating period in config...')
+    loadConfig()  
+    // console.log('updating period in config...')
     getDatesFromConfig(period);
 
     hidePeriodPopup();
@@ -263,7 +263,7 @@ function balanceForDisplay(dateRange) {
     // Use Promise.all to wait for all promises to resolve
     Promise.all(promises)
         .then((results) => {
-            console.log('=========================================================================================================================');
+            // console.log('=========================================================================================================================');
             // Loop through the results and accumulate earnings and spendings
             results.forEach((result) => {
                 // console.log('Earnings for ' + result.selectedDay + ':', result.sumOfEarnings);
@@ -275,12 +275,12 @@ function balanceForDisplay(dateRange) {
             });
             
             // Update the balance variable accordingly
-            console.log('earningsForPeriod:', earningsForPeriod)
-            console.log('spendingsForPeriod:', spendingForPeriod)
+            // console.log('earningsForPeriod:', earningsForPeriod)
+            // console.log('spendingsForPeriod:', spendingForPeriod)
             balance = earningsForPeriod - spendingForPeriod;
-            console.log('Balance for the period:', balance);
+            // console.log('Balance for the period:', balance);
             
-            console.log('=========================================================================================================================');
+            // console.log('=========================================================================================================================');
             // Update the UI with the current period
             const balanceForPeriod = document.getElementById('balance_for_period');
             if (balanceForPeriod) {
@@ -336,7 +336,7 @@ function addAvatarPath(path) {
             });
 
             addRequest.onsuccess = function (event) {
-                console.log('Avatar Path added successfully');
+                // console.log('Avatar Path added successfully');
                 loadAvatar(); // Update the UI with the new avatar path
             };
 
@@ -348,7 +348,7 @@ function addAvatarPath(path) {
             existingAvatar.value = path;
             configStore.put(existingAvatar);
 
-            console.log('Avatar Path updated successfully');
+            // console.log('Avatar Path updated successfully');
             loadAvatar(); // Update the UI with the new avatar path
         }
     };
@@ -369,7 +369,7 @@ function loadAvatar() {
         const avatarPath = event.target.result;
 
         if (avatarPath) {
-            console.log('Avatar Path:', avatarPath.value);
+            // console.log('Avatar Path:', avatarPath.value);
 
             // Update the UI with the avatar path
             const avatarImage = document.getElementById('avatar_image');
@@ -377,7 +377,7 @@ function loadAvatar() {
                 avatarImage.src = avatarPath.value;
             }
         } else {
-            console.log('Avatar Path not found');
+            // console.log('Avatar Path not found');
         }
     };
 
@@ -400,7 +400,7 @@ function loadCurrentDate() {
     loadSpinner('yearSpinner', 2020, 2050, year);
 
     const formattedCurrentDate = formatDateForDisplay(day, month, year);
-    console.log('formattedCurrentDate:', formattedCurrentDate);
+    // console.log('formattedCurrentDate:', formattedCurrentDate);
 
     // Update the date_button text with the formatted current date
     const currentDateDisplay = document.getElementById('currentDateDisplay');
@@ -485,7 +485,7 @@ function getDatesFromConfig(periodType) {
         const currentDate = event.target.result;
 
         if (currentDate) {
-            console.log('Current Date:', currentDate.value);
+            // console.log('Current Date:', currentDate.value);
 
             // Parse the selected date as a JavaScript Date object
             const dateParts = currentDate.value.split('.').map(part => parseInt(part, 10));
@@ -508,7 +508,7 @@ function getDatesFromConfig(periodType) {
 
             // You can use dateRange.start and dateRange.end as needed
         } else {
-            console.log('Current Date not found');
+            // console.log('Current Date not found');
         }
     };
 
@@ -547,7 +547,7 @@ function getDateRange(selectedDate, periodType) {
 
     switch (periodType) {
         case 'week':
-            console.log('parsing the date:', selectedDate);
+            // console.log('parsing the date:', selectedDate);
             const weekDates = getDaysInSameWeek(selectedDate);
             start = weekDates.startOfWeek;
             end = weekDates.endOfWeek;

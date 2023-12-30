@@ -138,22 +138,13 @@ body {
   color: white;
 }
 
-#actual_graph {
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  width: 80%;
-  height:35%;
-  font-size: 20px;
-}
-
 /* BALANCE SCREEN */
 
 #spending_label,
 #earning_label {
   position: absolute;
-  top: 30%;
-  height: 29px;
+  top: 29%;
+  height: 28px;
   width: 77px;
   color: var(--text_color);
   font-size: 25px;
@@ -203,12 +194,11 @@ body {
 .submit-button {
   position: absolute;
   top: 55%;
-  width: 77px;
+  width: 83px;
   background-color: var(--secondary_color);
   color: var(--text_color);
   border-color: var(--primary_color);
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .spendings_form_container .submit-button.spending {

@@ -1,5 +1,5 @@
-const staticCacheName = 'site-static-v8';
-const dynamicCacheName = 'site-dynamic-v4';
+const staticCacheName = 'site-static-v12';
+const dynamicCacheName = 'site-dynamic-v5';
 const assets = [
     '/',
     '/index.html',
@@ -8,6 +8,7 @@ const assets = [
     '/js/app.js',
     '/js/ui.js',
     '/css/styles.css',
+    '/img/favicon.ico',
     '/img/settings_button.png',
     '/img/man_1.png',
     '/img/man_2.png',

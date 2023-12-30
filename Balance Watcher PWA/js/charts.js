@@ -1,6 +1,6 @@
 // Function to update the bar chart based on spendings and earnings
 function updateBarChart(spendingsData, earningsData, selectedDay) {
-    console.log('------------------------- updating the chart ------------------------------');
+    // console.log('------------------------- updating the chart ------------------------------');
     var ctx = document.getElementById('barchart').getContext('2d');
 
     // Check if a chart instance already exists
@@ -43,7 +43,7 @@ function updateBarChart(spendingsData, earningsData, selectedDay) {
 
 // Function to get the date from IndexedDB
 function getDateFromConfig() {
-    console.log('getDateFromConfig called')
+    // console.log('getDateFromConfig called')
     return new Promise((resolve, reject) => {
         if (!('indexedDB' in window)) {
             reject(new Error('IndexedDB not supported'));
@@ -70,10 +70,10 @@ function getDateFromConfig() {
 
                 if (configData) {
                     var selectedDate = configData.value;
-                    console.log('Selected date from IndexedDB:', selectedDate);
+                    // console.log('Selected date from IndexedDB:', selectedDate);
                     resolve(selectedDate);
                 } else {
-                    console.log('No selected_day found in IndexedDB');
+                    // console.log('No selected_day found in IndexedDB');
                     reject(new Error('No selected_day found in IndexedDB'));
                 }
             };
@@ -85,7 +85,7 @@ function getDateFromConfig() {
         };
 
         dbRequest.onupgradeneeded = function (event) {
-            console.log('Upgrading IndexedDB');
+            // console.log('Upgrading IndexedDB');
             var db = event.target.result;
             db.createObjectStore('config', { keyPath: 'key' });
         };
@@ -94,7 +94,7 @@ function getDateFromConfig() {
 
 // Function to get the period from IndexedDB
 function getPeriodFromConfig() {
-    console.log('getPeriodFromConfig called')
+    // console.log('getPeriodFromConfig called')
     return new Promise((resolve, reject) => {
         if (!('indexedDB' in window)) {
             reject(new Error('IndexedDB not supported'));
@@ -120,10 +120,10 @@ function getPeriodFromConfig() {
                 
                 if (configData) {
                     var period = configData.value;
-                    console.log('Selected period from IndexedDB:', period);
+                    // console.log('Selected period from IndexedDB:', period);
                     resolve(period);
                 } else {
-                    console.log('No selected_day found in IndexedDB');
+                    // console.log('No selected_day found in IndexedDB');
                     reject(new Error('No selected_day found in IndexedDB'));
                 }
             };
@@ -135,7 +135,7 @@ function getPeriodFromConfig() {
         };
         
         dbRequest.onupgradeneeded = function (event) {
-            console.log('Upgrading IndexedDB');
+            // console.log('Upgrading IndexedDB');
             var db = event.target.result;
             db.createObjectStore('config', { keyPath: 'key' });
         };
@@ -160,8 +160,8 @@ function getEarningsAndSpendingsForDateToUpdateChart() {
                 var spendingsData = spendingsSnapshot.docs.reduce((total, doc) => total + doc.data().amount, 0);
                 
                 // Log or use the earningsData and spendingsData as needed
-                console.log('Earnings for ' + selectedDate + ':', earningsData);
-                console.log('Spendings for ' + selectedDate + ':', spendingsData);
+                // console.log('Earnings for ' + selectedDate + ':', earningsData);
+                // console.log('Spendings for ' + selectedDate + ':', spendingsData);
                 
                 // Update the bar chart with the data
                 updateBarChart(spendingsData, earningsData, selectedDate);
@@ -186,10 +186,10 @@ getEarningsAndSpendingsForDateToUpdateChart();
 
 // Function to update the bar chart based on spendings and earnings
 function updateHomeChart(spendingsData, earningsData, chartLabels) {
-    console.log('------------------------- updating the chart ------------------------------');
+    // console.log('------------------------- updating the chart ------------------------------');
     var ctx = document.getElementById('barchart-home').getContext('2d');
-    console.log(spendingsData, earningsData, chartLabels)
-    console.log(')))))))))))))))))))))))))))))))')
+    // console.log(spendingsData, earningsData, chartLabels)
+    // console.log(')))))))))))))))))))))))))))))))')
 
     // Check if a chart instance already exists
     var existingChart = Chart.getChart(ctx);
@@ -261,14 +261,11 @@ function yearChart(valuesForBuilding) {
     var earningsData = valuesForBuilding.monthlyEarnings
     const chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-    console.log(spendingsData)
-    console.log(earningsData)
-
     updateHomeChart(spendingsData, earningsData, chartLabels)
 }
 
 async function getInformationsForBuilding() {
-    console.log('getting Info for Building...');
+    // console.log('getting Info for Building...');
 
     try {
         // Wait for both promises to resolve
@@ -277,19 +274,19 @@ async function getInformationsForBuilding() {
             getDateFromConfig()
         ]);
 
-        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-        console.log('period:', period);
-        console.log('selectedDate:', selectedDate);
-        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+        // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+        // console.log('period:', period);
+        // console.log('selectedDate:', selectedDate);
+        // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
 
         const dateRange = getDateRangeForCharts(selectedDate, period);
         const dateArray = getDatesInRangeForCharts(dateRange);
 
-        console.log('=========================================================================================================================');
-        console.log('periodType: ', period);
-        console.log(`Start of the ${period}:`, dateRange.start);
-        console.log(`End of the ${period}:`, dateRange.end);
-        console.log('=========================================================================================================================');
+        // console.log('=========================================================================================================================');
+        // console.log('periodType: ', period);
+        // console.log(`Start of the ${period}:`, dateRange.start);
+        // console.log(`End of the ${period}:`, dateRange.end);
+        // console.log('=========================================================================================================================');
 
         // Call the simplified function to get values for building
         const valuesForBuilding = await getValuesForBuilding(dateArray);
@@ -413,9 +410,9 @@ function getValuesForBuilding(dateArray) {
     return Promise.all(promises)
         .then((results) => {
             results.forEach((result) => {
-                console.log('Earnings for ' + result.selectedDay + ':', result.sumOfEarnings);
-                console.log('Spendings for ' + result.selectedDay + ':', result.sumOfSpendings);
-                console.log('ˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇ')
+                // console.log('Earnings for ' + result.selectedDay + ':', result.sumOfEarnings);
+                // console.log('Spendings for ' + result.selectedDay + ':', result.sumOfSpendings);
+                // console.log('ˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇˇ')
 
                 earningsForPeriod += result.sumOfEarnings;
                 spendingsForPeriod += result.sumOfSpendings;

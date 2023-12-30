@@ -9,7 +9,7 @@ function getSelectedDayFromIndexedDB() {
         }
 
         // Open the main_db database or create it if it doesn't exist
-        console.log('Opening IndexedDB database');
+        // console.log('Opening IndexedDB database');
         var dbRequest = window.indexedDB.open('main_db');
 
         dbRequest.onerror = function (event) {
@@ -18,7 +18,7 @@ function getSelectedDayFromIndexedDB() {
         };
 
         dbRequest.onsuccess = function (event) {
-            console.log('Opened IndexedDB successfully');
+            // console.log('Opened IndexedDB successfully');
             // Get the database reference
             var db = event.target.result;
 
@@ -42,7 +42,7 @@ function getSelectedDayFromIndexedDB() {
                     
                     // Set a default value for selected_day (you can modify this as needed)
                     selectedDay = new Date().toLocaleDateString('cs-CZ');
-                    console.log(selectedDay)
+                    // console.log(selectedDay)
 
                     // Update the 'selected_day' key with the default value
                     configStore.put({
@@ -50,10 +50,10 @@ function getSelectedDayFromIndexedDB() {
                         value: selectedDay
                     });
 
-                    console.log('Default value for selected_day set:', selectedDay);
+                    // console.log('Default value for selected_day set:', selectedDay);
                 }
 
-                console.log('Selected Day from IndexedDB:', selectedDay);
+                // console.log('Selected Day from IndexedDB:', selectedDay);
 
                 // Resolve the promise after successful retrieval
                 resolve(selectedDay);
@@ -67,7 +67,7 @@ function getSelectedDayFromIndexedDB() {
         };
 
         dbRequest.onupgradeneeded = function (event) {
-            console.log('Upgrading IndexedDB');
+            // console.log('Upgrading IndexedDB');
             // Create the 'config' object store if it doesn't exist
             var db = event.target.result;
             db.createObjectStore('config', { keyPath: 'key' });
@@ -90,8 +90,8 @@ db.enablePersistence()
 // Modify the function to return a Promise
 function addDataToBalance(formType, amount, comment, selectedDay) {
 
-    console.log('addData... function being called rn');
-    console.log('selectedDay: ', selectedDay, '-----------------------------')
+    // console.log('addData... function being called rn');
+    // console.log('selectedDay: ', selectedDay, '-----------------------------')
     return new Promise((resolve, reject) => {
         // Reference to the "balance" collection for the selected date
         var balanceDocRef = db.collection('balance').doc(selectedDay);
@@ -120,13 +120,13 @@ function addDataToBalance(formType, amount, comment, selectedDay) {
                 comment: comment || null
             });
         }).then(() => {
-            console.log('Data added successfully.');
+            // console.log('Data added successfully.');
             resolve(); // Resolve the promise when data is added
         }).catch((error) => {
             console.error('Error adding data:', error);
             reject(error); // Reject the promise if there's an error
         });
-        console.log('!!!! ADDING DATA DONE !!!!');
+        // console.log('!!!! ADDING DATA DONE !!!!');
     });
 }
 
@@ -185,7 +185,7 @@ function updateSelectedDay(selectedDate) {
     // Add or update the 'selected_day' key in the config table
     configStore.put(selectedDayObject);
 
-    console.log('Selected Day updated successfully');
+    // console.log('Selected Day updated successfully');
 }
 
 // Initialize the app when the DOM is fully loaded
