@@ -20,6 +20,8 @@
             --primary_color: #a8cbff;
             --secondary_color: #4a87e3;
             --third_color: #7a7979;
+            --text-color: black;
+            --secondary_text_color: black;
         }
 
         body.dark-theme {
@@ -29,10 +31,10 @@
             --secondary_color: #a8cbff;
             --third_color: #7a7979;
             --text_color: black;
+            --secondary_text_color: white;
         }
 
         body {
-            /* Apply background color using the custom property */
             background-color: var(--background_color);
         }
     </style>
@@ -40,8 +42,7 @@
 </head>
 
 <body>
-    <!-- Label to indicate the current screen, will be deleted later -->
-    <p id="paragraph">HomeScreen</p>
+    <!-- <p id="paragraph">V2</p> -->
 
     <!-- Settings Button -->
     <a href="/pages/settings_screen.html" class="settings_button"><img id="settings_image" src="/img/settings_button.png" alt=""></a>
@@ -76,7 +77,7 @@
                 <div class="spinner" id="monthSpinner"></div>
                 <div class="spinner" id="yearSpinner"></div>
             </div>
-            <button onclick="console.log('ok_button pressed');updateSelectedDate();getInformationsForBuilding()">OK</button>
+            <button class="ok_button" onclick="console.log('ok_button pressed');updateSelectedDate();getInformationsForBuilding()">OK</button>
         </div>
     </div>
 
@@ -113,18 +114,19 @@
 
     <script src="/js/theme.js"></script>
 
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-firestore.js"></script>
-    <script src="/js/initializing_database.js"></script>
+    <script defer src="/js/initializing_database.js"></script>
+    <!-- <script defer src="/js/auth.js"></script> -->
 
 
-    <script src="/js/db.js"></script>
+    <script defer src="/js/charts.js"></script>
+    <script defer src="/js/db.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/ui.js"></script>
-    <script src="/js/charts.js"></script>
 
 </body>
 </html>
