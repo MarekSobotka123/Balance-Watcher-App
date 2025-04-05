@@ -75,26 +75,14 @@ function getSelectedDayFromIndexedDB() {
     });
 }
 
-// offline data
-db.enablePersistence()
-    .catch(err => {
-        if (err.code == 'failed-precondition') {
-            // probably multiple tabs open at once
-            console.log('Persistence failed');
-        } else if (err.code == 'unimplemented') {
-            // lack of browser support
-            console.log('Persistence is not available');
-        }
-    });
-
 // Modify the function to return a Promise
-function addDataToBalance(formType, amount, comment, selectedDay) {
-
+async function addDataToBalance(formType, amount, comment, selectedDay) {
+    await waitingForUserUid();
     // console.log('addData... function being called rn');
     // console.log('selectedDay: ', selectedDay, '-----------------------------')
     return new Promise((resolve, reject) => {
         // Reference to the "balance" collection for the selected date
-        var balanceDocRef = db.collection('balance').doc(selectedDay);
+        var balanceDocRef = db.collection('users').doc(window.userUid).collection('balance').doc(selectedDay);
 
         // Declare balanceDocRef and dataType outside the scope of the promise chain
         var dataType;
@@ -120,25 +108,24 @@ function addDataToBalance(formType, amount, comment, selectedDay) {
                 comment: comment || null
             });
         }).then(() => {
-            // console.log('Data added successfully.');
             resolve(); // Resolve the promise when data is added
         }).catch((error) => {
             console.error('Error adding data:', error);
             reject(error); // Reject the promise if there's an error
         });
-        // console.log('!!!! ADDING DATA DONE !!!!');
     });
 }
 
 // Function to get earnings and spendings for the current date
-function getEarningsAndSpendingsForDate(selectedDay) {
+async function getEarningsAndSpendingsForDate(selectedDay) {
+    await waitingForUserUid();
     return new Promise((resolve, reject) => {
         // Arrays to store earnings and spendings data
         var earningsData = [];
         var spendingsData = [];
 
         // Reference to the "balance" collection for the specified date
-        var balanceDocRef = db.collection('balance').doc(selectedDay);
+        var balanceDocRef = db.collection('users').doc(window.userUid).collection('balance').doc(selectedDay);
 
         // Get earnings for the specified date
         balanceDocRef.collection('individual_earnings').get().then((earningsSnapshot) => {
@@ -188,6 +175,172 @@ function updateSelectedDay(selectedDate) {
     // console.log('Selected Day updated successfully');
 }
 
+// Function to delete data from the database
+async function deleteDataFromDatabase(collectionName, docId) {
+    const docRef = db.collection('users').doc(window.userUid).collection('balance').doc(selectedDay).collection(collectionName).doc(docId);
+    await docRef.delete();
+    openModifyPopup();
+}
+
+async function getDataForModifyTable() {
+    await waitingForUserUid();
+    var balanceDocRef = db.collection('users').doc(window.userUid).collection('balance').doc(selectedDay);
+
+    // Get individual earnings
+    const earningsContent = document.getElementById('earnings-content');
+    const earningsHeading = document.createElement('h4');
+    earningsHeading.textContent = 'Earnings';
+    earningsContent.innerHTML = ''; // Clear existing content
+    earningsContent.appendChild(earningsHeading);
+
+    balanceDocRef.collection('individual_earnings').get().then((earningsSnapshot) => {
+        if (!earningsSnapshot.empty) {
+            earningsSnapshot.forEach((earningDoc) => {
+                const earningData = earningDoc.data();
+                const earningDiv = document.createElement('div');
+                earningDiv.className = `earning-entry`;
+
+                const earningParagraphAmount = createEditableParagraph(
+                    'earning-amount',
+                    earningData['amount'],
+                    (newContent) => updateDataInDatabase('individual_earnings', earningDoc.id, { amount: newContent })
+                );
+
+                const earningParagraphComment = createEditableParagraph(
+                    'earning-comment',
+                    earningData['comment'],
+                    (newContent) => updateDataInDatabase('individual_earnings', earningDoc.id, { comment: newContent })
+                );
+
+                // Create image element
+                const earningImage = createDeleteImage('individual_earnings', earningDoc);
+
+                earningDiv.appendChild(earningParagraphAmount);
+                earningDiv.appendChild(earningParagraphComment);
+                earningDiv.appendChild(earningImage);
+
+                earningsContent.appendChild(earningDiv);
+            });
+        } else {
+            earningsContent.innerHTML += '<p>No individual earnings for this date</p>';
+        }
+    });
+
+    // Get individual spendings
+    const spendingsContent = document.getElementById('spendings-content');
+    const spendingsHeading = document.createElement('h4');
+    spendingsHeading.textContent = 'Spendings';
+    spendingsContent.innerHTML = ''; // Clear existing content
+    spendingsContent.appendChild(spendingsHeading);
+
+    balanceDocRef.collection('individual_spendings').get().then((spendingSnapshot) => {
+        if (!spendingSnapshot.empty) {
+            spendingSnapshot.forEach((spendingDoc) => {
+                const spendingData = spendingDoc.data();
+                const spendingDiv = document.createElement('div');
+                spendingDiv.className = `spending-entry`;
+
+                const spendingParagraphAmount = createEditableParagraph(
+                    'spending-amount',
+                    spendingData['amount'],
+                    (newContent) => updateDataInDatabase('individual_spendings', spendingDoc.id, { amount: newContent })
+                );
+
+                const spendingParagraphComment = createEditableParagraph(
+                    'spending-comment',
+                    spendingData['comment'],
+                    (newContent) => updateDataInDatabase('individual_spendings', spendingDoc.id, { comment: newContent })
+                );
+
+                // Create image element
+                const spendingImage = createDeleteImage('individual_spendings', spendingDoc);
+
+                spendingDiv.appendChild(spendingParagraphAmount);
+                spendingDiv.appendChild(spendingParagraphComment);
+                spendingDiv.appendChild(spendingImage);
+
+                spendingsContent.appendChild(spendingDiv);
+            });
+        } else {
+            spendingsContent.innerHTML += '<p>No individual spendings for this date</p>';
+        }
+    });
+}
+
+function createDeleteImage(collectionName, doc) {
+    const deleteImage = document.createElement('img');
+    deleteImage.src = "/img/delete_icon.png";
+    const imageSize = 16;
+    deleteImage.width = imageSize;
+    deleteImage.height = imageSize;
+    deleteImage.className = 'trash-icon';
+    
+    // Add event listener to delete data on click
+    deleteImage.addEventListener('click', () => {
+        showConfirmationPopup(collectionName, doc);
+    });
+
+    return deleteImage;
+}
+
+function showConfirmationPopup(collectionName, doc) {
+    const rusPopup = document.getElementById('rusPopup');
+    rusPopup.style.display = 'block';
+
+    const message = document.getElementById('RUS-message');
+    message.innerHTML = `'${doc.data()['amount']} ${doc.data()['comment']}'`;
+
+    const rusYesButton = document.getElementById('rus-yes');
+    const rusNoButton = document.getElementById('rus-no');
+
+    // Add event listeners to Yes and No buttons
+    rusYesButton.addEventListener('click', () => {
+        // If Yes is clicked, close the popup and delete the data
+        rusPopup.style.display = 'none';
+        deleteDataFromDatabase(collectionName, doc.id);
+    });
+
+    rusNoButton.addEventListener('click', () => {
+        // If No is clicked, close the popup without deleting the data
+        rusPopup.style.display = 'none';
+    });
+}
+
+// Function to create editable paragraph and handle input events
+function createEditableParagraph(className, initialContent, onChange) {
+    const paragraph = document.createElement('p');
+    paragraph.className = className;
+    paragraph.contentEditable = true;
+    paragraph.textContent = initialContent;
+    if (className == 'earning-amount' || className == 'spending-amount') {
+        paragraph.setAttribute('inputmode', 'numeric');
+    }
+
+    paragraph.addEventListener('input', () => {
+        const newContent = paragraph.textContent.trim();
+        console.log(`Edited ${className}: ${newContent}`);
+        onChange(newContent);
+    });
+
+    return paragraph;
+}
+
+// Function to update data in the database
+async function updateDataInDatabase(collection, docId, newData) {
+    if (newData.hasOwnProperty('amount')) {
+        console.log('parsing newData', newData.amount, 'type:', typeof(newData.amount), 'to int');
+        if (isNaN(newData.amount)) {
+            console.log('newData:', newData, 'isNaN');
+        } else {
+            newData.amount = parseInt(newData.amount, 10);
+            console.log('newData:',  newData.amount);
+        }
+    }
+    await db.collection('users').doc(window.userUid).collection('balance').doc(selectedDay)
+        .collection(collection).doc(docId).update(newData);
+}
+
+
 // Initialize the app when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function () {
     // Load the selected day from IndexedDB
@@ -209,13 +362,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Set the global selectedDay variable
         selectedDay = selectedDate;
-
-        // Add other initialization tasks as needed
-        
-        
-        // Now you can safely call functions that depend on selectedDay
-        // For example, you can call addDataToBalance or getEarningsAndSpendingsForDate here
-        // because selectedDay has been properly initialized
     });
 });
 
