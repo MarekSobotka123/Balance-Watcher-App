@@ -1,4 +1,4 @@
-# Balance Watcher
+# 💸 Balance Watcher 💸
 
 **Balance Watcher** is a Progressive Web App (PWA) for tracking income and expenses with clear graphs and statistics. It allows users to easily record financial transactions and gain insights into their weekly, monthly, and yearly balance.
 
