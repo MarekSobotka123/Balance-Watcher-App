@@ -397,7 +397,7 @@ function loadCurrentDate() {
     // Load the day, month, and year spinners
     loadSpinner('daySpinner', 1, 31, day);
     loadSpinner('monthSpinner', 1, 12, month);
-    loadSpinner('yearSpinner', 2020, 2050, year);
+    loadSpinner('yearSpinner', 2020, 2100, year);
 
     const formattedCurrentDate = formatDateForDisplay(day, month, year);
     // console.log('formattedCurrentDate:', formattedCurrentDate);
@@ -463,6 +463,48 @@ function openErrorPopup() {
 // Function to close Error Popup
 function closeErrorPopup() {
     document.getElementById('errorPopup').style.display = 'none';
+}
+
+function openModifyPopup() {
+    getDataForModifyTable();
+    document.getElementById('modifyPopup').style.display = 'block';
+}
+
+function closeModifyPopup() {
+    document.getElementById('modifyPopup').style.display = 'none';
+    getEarningsAndSpendingsForDateToUpdateChart();
+}
+
+function closeRUSPopup() {
+    document.getElementById('rusPopup').style.display = 'none';
+}
+
+function openSignupPopup() {
+    document.getElementById('signupPopup').style.display = 'block';
+}
+
+function closeSignupPopup() {
+    document.getElementById('signupPopup').style.display = 'none';
+    const signupForm = document.querySelector('#signup-form');
+    signupForm.reset();
+}
+
+function openLoginPopup() {
+    document.getElementById('loginPopup').style.display = 'block';
+}
+
+function closeLoginPopup() {
+    document.getElementById('loginPopup').style.display = 'none';
+    const loginForm = document.querySelector('#login-form');
+    loginForm.reset();
+    document.getElementById('error-login-text').style.display = 'none';
+}
+
+function openLogoutPopup() {
+    document.getElementById('logoutPopup').style.display = 'block';
+}
+function closeLogoutPopup() {
+    document.getElementById('logoutPopup').style.display = 'none';
 }
 
 // Function to get the start and end dates based on the selected date from the config table
