@@ -22,6 +22,8 @@
             --primary_color: #a8cbff;
             --secondary_color: #4a87e3;
             --third_color: #7a7979;
+            --text-color: black;
+            --secondary_text_color: black;
         }
 
         body.dark-theme {
@@ -31,10 +33,10 @@
             --secondary_color: #a8cbff;
             --third_color: #7a7979;
             --text_color: black;
+            --secondary_text_color: white;
         }
 
         body {
-            /* Apply background color using the custom property */
             background-color: var(--background_color);
         }
     </style>
@@ -42,21 +44,18 @@
 </head>
 
 <body>
-    <!-- Label to indicate the current screen, will be deleted later -->
-    <p id="paragraph">BalanceScreen</p>
+    <!-- <p id="paragraph">BalanceScreen</p> -->
 
     <!-- Settings Button -->
     <a href="/pages/settings_screen.html" class="settings_button"><img id="settings_image"
             src="/img/settings_button.png" alt=""></a>
 
-    <!-- Home Button -->
-    <a href="/index.html" class="home_button">Home</a>
-
+    
     <!-- Avatar Button/Image -->
     <div id="avatar_button">
         <img id="avatar_image" src="/img/man_1.png">
     </div>
-
+    
     <!-- Avatar Popup -->
     <!-- <div id="avatarPopup" class="popup">
         <div class="popup-content">
@@ -65,11 +64,11 @@
             <div id="avatarGrid" class="avatar-grid"></div>
         </div>
     </div> -->
-
+    
     <!-- Date Button -->
     <button id="date_button" onclick="console.log('date_button pressed');openDateSelectionPopup()"><span id="currentDateDisplay"></span>
     </button>
-
+    
     <!-- Date Selection Popup -->
     <div id="dateSelectionPopup" class="popup">
         <div class="popup-content">
@@ -80,10 +79,10 @@
                 <div class="spinner" id="monthSpinner"></div>
                 <div class="spinner" id="yearSpinner"></div>
             </div>
-            <button onclick="console.log('ok_button pressed');updateSelectedDate();getEarningsAndSpendingsForDateToUpdateChart()">OK</button>
+            <button class="ok_button" onclick="console.log('ok_button pressed');updateSelectedDate();getEarningsAndSpendingsForDateToUpdateChart();getSelectedDayFromIndexedDB()">OK</button>
         </div>
     </div>
-
+    
     <!-- Spendings Inputs -->
     <div class="spendings_form_container">
         <form id="spendings_form">
@@ -107,7 +106,7 @@
             <button type="button" class="submit-button earning" onclick="submitForm('earning_form')">Submit</button>
         </form>
     </div>
-
+    
     <!-- Data Label -->
     <div class="container">
         <div class="chart">
@@ -122,15 +121,48 @@
             <h4>Please enter valid number</h4>
         </div>
     </div>
-    <script src="/js/theme.js"></script>
 
+    <!-- Temporary Modify Database Button -->
+    <div id="modifyPopupButton">
+        <label for="modifybutton">more info</label>
+        <img src="/img/link_icon.png" id="modifybutton" onclick="openModifyPopup()"></img>
+    </div>
+
+    <!-- Modify Database Popup -->
+    <div id="modifyPopup" class="popup">
+        <div id="modifyPopup-content" class="popup-content">
+            <span class="close" onclick="closeModifyPopup()">&times;</span>
+            <div class="modify-content">
+                <div class="modify-content-inner" id="earnings-content"></div>
+                <div class="modify-content-inner" id="spendings-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Are you sure (rus) Popup -->
+    <div id="rusPopup" class="popup">
+        <div id="rus-content" class="popup-content">
+            <span class="close" onclick="closeRUSPopup()">&times;</span>
+            <h2>Are you sure you want to delete <span id="RUS-message"></span></h2>
+            <div id="rus-buttons">
+                <button class="rus_button" id="rus-yes">Yes</button>
+                <button class="account_button" id="rus-no">No</button>
+            </div>
+        </div>
+    </div>
     
-
+    <!-- Home Button -->
+    <a href="/index.html" class="home_button">Home</a>
+    
+    <script src="/js/theme.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-firestore.js"></script>
     <script src="/js/initializing_database.js"></script>
+    <!-- <script defer src="/js/auth.js"></script> -->
 
     <script src="/js/charts.js"></script>
 
@@ -156,9 +188,9 @@
             }
 
             // Log the values to the console
-            console.log("Form ID: " + formId);
-            console.log("Value: " + value);
-            console.log("Comment: " + comment);
+            // console.log("Form ID: " + formId);
+            // console.log("Value: " + value);
+            // console.log("Comment: " + comment);
 
             // Call the function to get the selected date
             getSelectedDayFromIndexedDB()
