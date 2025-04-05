@@ -1,15 +1,17 @@
-const staticCacheName = 'site-static-v12';
-const dynamicCacheName = 'site-dynamic-v5';
+const staticCacheName = 'site-static-v15';
+const dynamicCacheName = 'site-dynamic-v6';
 const assets = [
     '/',
     '/index.html',
     '/pages/balance_screen.html',
+    '/pages/settings_screen.html',
     '/pages/fallback.html',
     '/js/app.js',
     '/js/ui.js',
     '/css/styles.css',
     '/img/favicon.ico',
     '/img/settings_button.png',
+    '/img/delete_icon.png',
     '/img/man_1.png',
     '/img/man_2.png',
     '/img/man_3.png',
