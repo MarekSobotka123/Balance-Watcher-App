@@ -1,26 +1,25 @@
+// CHART FOR BALANCE SCREEN 
+
 // Function to update the bar chart based on spendings and earnings
 function updateBarChart(spendingsData, earningsData, selectedDay) {
-    // console.log('------------------------- updating the chart ------------------------------');
-    var ctx = document.getElementById('barchart').getContext('2d');
+    var balance = earningsData - spendingsData;
 
-    // Check if a chart instance already exists
+    var ctx = document.getElementById('barchart').getContext('2d');
     var existingChart = Chart.getChart(ctx);
 
-    // Destroy the existing chart if it exists
     if (existingChart) {
         existingChart.destroy();
     }
 
-    // Create a bar chart
     var myBarChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: [`Výdaje: ${spendingsData}`, `Příjmy: ${earningsData}`],
             datasets: [{
-                label: `Graf: ${selectedDay}`,
+                label: `Balance: ${balance}`,
                 data: [spendingsData, earningsData],
-                borderWidth: 1,
-                borderRadius: 15, // Rounded edges in CSS
+                borderWidth: 1a,
+                borderRadius: 15,
             }],
         },
         options: {
@@ -32,13 +31,30 @@ function updateBarChart(spendingsData, earningsData, selectedDay) {
             plugins: {
                 legend: {
                     onClick: function (e) {
-                        e.stopPropagation(); // Prevent the default legend onClick behavior
+                        e.stopPropagation();
+                    },
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'nearest',
+                    intersect: false,
+                    callbacks: {
+                        title: function (tooltipItem) {
+                            // Show label only for spendings and earnings, not for balance
+                            if (tooltipItem[0].datasetIndex !== 0) {
+                                return ` ${tooltipItem[0].label}`;
+                            }
+                        },
+                        label: function (context) {
+                            return ` ${context.parsed.toFixed(2)}`;
+                        },
                     },
                 },
             },
         },
     });
 }
+
 
 
 // Function to get the date from IndexedDB
@@ -143,12 +159,13 @@ function getPeriodFromConfig() {
 }
 
 // Function to get spendings and earnings for the current day
-function getEarningsAndSpendingsForDateToUpdateChart() {
+async function getEarningsAndSpendingsForDateToUpdateChart() {
+    await waitingForUserUid();
     // Get the current date
     return getDateFromConfig().then((selectedDate) => {
         
         // Reference to the "balance" collection for the specified date
-        var balanceDocRef = db.collection('balance').doc(selectedDate);
+        var balanceDocRef = db.collection('users').doc(window.userUid).collection('balance').doc(selectedDate);
         
         
         // Get earnings for the specified date
@@ -243,6 +260,8 @@ function updateHomeChart(spendingsData, earningsData, chartLabels) {
 function weekChart(valuesForBuilding) {
     var spendingsData = valuesForBuilding.spedningsPerDay
     var earningsData = valuesForBuilding.earningsPerDay
+    console.log('Earnings:', earningsData)
+    console.log('Spendings:', spendingsData)
     const chartLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
     updateHomeChart(spendingsData, earningsData, chartLabels);
@@ -300,6 +319,7 @@ async function getInformationsForBuilding() {
         }
         
     } catch (error) {
+        console.log('user uid:', window.userUid);
         console.error('Error:', error);
         throw error;
     }
