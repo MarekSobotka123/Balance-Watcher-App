@@ -20,6 +20,8 @@
             --primary_color: #a8cbff;
             --secondary_color: #4a87e3;
             --third_color: #7a7979;
+            --text-color: black;
+            --secondary_text_color: black;
         }
 
         body.dark-theme {
@@ -29,17 +31,17 @@
             --secondary_color: #a8cbff;
             --third_color: #7a7979;
             --text_color: black;
+            --secondary_text_color: white;
         }
 
         body {
-            /* Apply background color using the custom property */
             background-color: var(--background_color);
         }
     </style>
 
 </head>
 <body>
-    <p id="paragraph">Settings Screen</p>
+    <!-- <p id="paragraph">Settings Screen</p> -->
 
     <!-- Avatar Button/Image -->
     <div id="avatar_button">
@@ -55,11 +57,12 @@
         </div>
     </div>
 
+    
     <!-- Appearance Switch -->
-    <div class="appearance-container">
+    <div class="settings_div" id="appearance-container">
         <h3>APPEARANCE</h3>
         <div class="switch-container">
-            <span class="text-left">DARK</span>
+            <span class="text-left"->DARK</span>
             <label class="switch">
                 <input type="checkbox" id="theme-switch">
                 <span class="slider round"></span>
@@ -67,13 +70,94 @@
             <span class="text-right">LIGHT</span>
         </div>
     </div>
+    
+    <!-- Account -->
+    <div class="settings_div" id="account-container">
+        <h3>Account:&nbsp;&nbsp;<span id="account-span"></span></h3>
+        <div id="account_buttons">
+            <button class="account-buttons" id="signup_popup_button" onclick="console.log('signup popup button pressed');openSignupPopup()">Sign Up</button>
+            <button class="account-buttons" id="login_popup_button" onclick="console.log('login popup button pressed');openLoginPopup()">Login</button>
+            <button class="account-buttons" id="logout_button">Logout</button>
+        </div>
+    </div>
 
+
+    <!-- Signup Popup -->
+    <div id="signupPopup" class="popup">
+        <div id="signup-content" class="popup-content">
+            <span class="close" onclick="closeSignupPopup()">&times;</span>
+            <h2>Sign Up</h2>
+            <form id="signup-form">
+                <div class="input-field">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required />
+                </div>
+                <div class="input-field">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required />
+                </div>
+                <div class="input-field">
+                    <label for="signup-password-confirm">Confirm Password</label>
+                    <input type="password" id="signup-password-confirm" required />
+                </div>
+                <div id="signup-error">
+                    <p id="error-signup-text"><span id="error-message"></span></p>
+                </div>
+                <div class="button-field">
+                    <button class="account_button" onclick="console.log('button pressed')">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Popup -->
+    <div id="loginPopup" class="popup">
+        <div id="login-content" class="popup-content">
+            <span class="close" onclick="closeLoginPopup()">&times;</span>
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="input-field">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required />
+                </div>
+                <div class="input-field">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div id="login-error">
+                    <p id="error-login-text">Incorrect Password or Email</p>
+                </div>
+                <div class="button-field">
+                    <button class="account_button" onclick="console.log('button pressed')">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Logout Popup -->
+    <div id="logoutPopup" class="popup">
+        <div id="logout-content" class="popup-content">
+            <span class="close" onclick="closeLogoutPopup()">&times;</span>
+            <h2>Are you sure?</h2>
+            <div id="logout-buttons">
+                <button class="account_button" id="logout-yes" onclick="auth.signOut();closeLogoutPopup()">Yes</button>
+                <button class="account_button" id="logout-no" onclick="closeLogoutPopup()">No</button>
+            </div>
+        </div>
+    </div>
+
+    
     <!-- Home Button -->
     <a href="/index.html" class="home_button">Home</a>
+
+    <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.1/firebase-firestore.js"></script>
+    <script src="/js/initializing_database.js"></script>
+    <!-- <script defer src="/js/auth.js"></script> -->
 
     <script src="/js/theme.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/ui.js"></script>
-
 </body>
 </html>
